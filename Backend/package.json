@@ -3,14 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "devstart": "node --watch --env-file=.env server.js",
+    "seed": "node --env-file=.env seed.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.19.2",
-    "mongoose": "^8.4.1"
+    "http-errors": "^2.0.0",
+    "mongoose": "^8.4.1",
+    "validator": "^13.12.0"
   }
 }
