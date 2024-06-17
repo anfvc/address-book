@@ -1,5 +1,5 @@
 
-function MyContacts() {
+function MyContacts({userId}) {
   return (
     <div>MyComponents</div>
   )

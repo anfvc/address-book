@@ -7,10 +7,22 @@ function App() {
   const [existUser, setExistUser] = useState(null);
   const [showLogin, setShowLogin] = useState(true);
 
+  function handleToggleLogin() {
+    setShowLogin(!showLogin);
+  }
+
   return (
-    <div className="w-full max-w-screen-2xl mx-auto min-h-screen	">{!existUser ? showLogin ? <Login /> : <Register /> : <div>
-      </div>}
-      </div>
+    <div className="w-full flex flex-col justify-center max-w-screen-2xl mx-auto min-h-screen">
+      {!existUser ? (
+        showLogin ? (
+          <Login onClick={handleToggleLogin} setUserId={setExistUser} />
+        ) : (
+          <Register onClick={handleToggleLogin} setUserId={setExistUser} />
+        )
+      ) : (
+        <MyContacts userId={setExistUser} />
+      )}
+    </div>
   );
 }
 
