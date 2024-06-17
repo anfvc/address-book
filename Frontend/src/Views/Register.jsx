@@ -43,7 +43,7 @@ function Register({ onClick, setUserId }) {
         component="form"
         onSubmit={handleRegistration}
         sx={{
-          "& > :not(style)": { m: 1, width: "25ch" },
+          "& > :not(style)": { m: 1, width: 400, maxWidth: "100%" },
         }}
         noValidate
         autoComplete="off"
