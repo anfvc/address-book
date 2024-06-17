@@ -2,7 +2,10 @@ import express from "express";
 import cors from "cors";
 import connectDataBase from "./Libs/database.js";
 import { globalErrorHandler } from "./GlobalErrorHandler/GErrorHandler.js";
-import { registerUser } from "./Controllers/registerController.js";
+import registerRouter from "./Routes/registerRouter.js";
+import loginRouter from "./Routes/loginRouter.js";
+import contactsRouter from "./Routes/contactsRouter.js";
+import usersRouter from "./Routes/usersRouter.js";
 
 //* Connecting our database: (./Libs/database.js)
 await connectDataBase();
@@ -15,8 +18,15 @@ app.use(express.json());
 //* Allowing users to access the server from different origins:
 app.use(cors());
 
-app.use("/register", registerUser);
-// app.use("/login", loginRouter);
+//* Routes:
+
+app.use("/users", usersRouter);
+
+app.use("/register", registerRouter);
+
+app.use("/login", loginRouter);
+
+app.use("/contacts", contactsRouter);
 
 const port = process.env.PORT || 3001;
 

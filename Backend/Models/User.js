@@ -39,9 +39,16 @@ const userSchema = new Schema({
   address: {
     type: String,
     required: true,
+    unique: true,
   },
   contacts: {
-    type: [],
+    type: [
+      {
+        type: mongoose.ObjectId,
+        required: true,
+        ref: "Contact", //* Reference to the Contact Model
+      },
+    ],
     required: true,
     default: [],
   },
