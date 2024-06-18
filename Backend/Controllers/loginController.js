@@ -21,6 +21,7 @@ async function loginUser(req, res, next) {
       res.json({
         id: foundUser._id,
         username: foundUser.username,
+        message: `${foundUser.username} has logged in.`
       });
       console.log(`${foundUser.username} has successfully logged in.`);
     } else {

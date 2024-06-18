@@ -12,7 +12,7 @@ function App() {
   }
 
   return (
-    <div className="w-full flex flex-col justify-center max-w-screen-2xl mx-auto min-h-screen">
+    <div className="w-full flex items-center justify-center max-w-screen-2xl mx-auto min-h-screen">
       {!existUser ? (
         showLogin ? (
           <Login onClick={handleToggleLogin} setUserId={setExistUser} />
@@ -20,7 +20,7 @@ function App() {
           <Register onClick={handleToggleLogin} setUserId={setExistUser} />
         )
       ) : (
-        <MyContacts userId={setExistUser} />
+        <MyContacts userId={existUser} setUserId={setExistUser} />
       )}
     </div>
   );

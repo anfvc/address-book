@@ -2,11 +2,17 @@ import Contact from "../Models/Contact.js";
 import createHttpError from "http-errors";
 
 async function createContact(req, res, next) {
-  const { firstName, lastName, phone, address } = req.body;
+  const { firstName, lastName, phone, address, addedBy } = req.body;
 
   try {
     //? Try to create a new contact inside the "contacts" collection:
-    const newContact = await Contact.create({ firstName, lastName, phone, address });
+    const newContact = await Contact.create({
+      firstName,
+      lastName,
+      phone,
+      address,
+      addedBy,
+    });
 
     //? If this is successful, return the _id of the new "contact" in the response:
     res.status(201).json({
@@ -20,7 +26,9 @@ async function createContact(req, res, next) {
       return next(createHttpError(400, errorMessage));
     }
 
-    next(createHttpError(500, "Contact could not be created. Please try again."))
+    next(
+      createHttpError(500, "Contact could not be created. Please try again.")
+    );
   }
 }
 

@@ -10,7 +10,7 @@ const contactSchema = new Schema({
   lastName: {
     type: String,
     required: true,
-    minLength: [3, "Last name must be at least 3 chars long."],
+    minLength: [5, "Last name must be at least 3 chars long."],
   },
   phone: {
     type: String,
@@ -21,6 +21,19 @@ const contactSchema = new Schema({
       },
       message: "Please provide a valid german number.",
     },
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  addedBy: {
+    //* When a person wants to create a new contact, the contact will have a copy of the user's _id
+    type: mongoose.ObjectId,
+    default: null,
+  },
+  softDeletedAt: {
+    type: Date,
+    default: null,
   },
 });
 
