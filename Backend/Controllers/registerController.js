@@ -49,6 +49,7 @@ async function registerUser(req, res, next) {
     //* When the document is created, send back a success response:
     res.status(201).json({
       id: newUser.id,
+      username: newUser.username
     });
   } catch (error) {
     if (error.name === "ValidationError") {

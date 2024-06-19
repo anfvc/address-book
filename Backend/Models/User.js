@@ -10,7 +10,7 @@ const userSchema = new Schema({
       validator: function (value) {
         return validator.isEmail(value); //* If email is valid, return true. It not, false.
       },
-      message: "Email address is not in a correct format",
+      message: "Email is not in a correct format",
     },
   },
   username: {
@@ -35,6 +35,20 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    validate: [
+      {
+        validator: function (value) {
+          return validator.isMobilePhone(value);
+        },
+        message: "Please provide a valid phone number.",
+      },
+      {
+        validator: function (value) {
+          return validator.isLength(value, { min: 10 });
+        },
+        message: "Phone must be 10 characters long."
+      },
+    ],
   },
   address: {
     type: String,

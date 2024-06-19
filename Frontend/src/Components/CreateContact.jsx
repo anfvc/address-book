@@ -1,8 +1,10 @@
 import { Box, TextField } from "@mui/material";
 import Button from "./Button";
 import { useState } from "react";
+import { useAlert } from "./AlertContext";
 
-function CreateContact({ user, userId, setUser }) {
+function CreateContact({ user, userId, setUser, handleDelete, logOut }) {
+  const { showAlert } = useAlert();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
@@ -23,7 +25,7 @@ function CreateContact({ user, userId, setUser }) {
       setLError(!lastName);
       setPhoneError(!phone);
       setAddressError(!address);
-      return;
+      return; //if this condition is met, please exit the code block.
     }
 
     try {
@@ -51,7 +53,10 @@ function CreateContact({ user, userId, setUser }) {
 
         const settings2 = {
           method: "PATCH",
-          body: JSON.stringify({ id: newContact.id }),
+          body: JSON.stringify({
+            id: newContact.id,
+            firstName: newContact.firstName,
+          }),
           headers: {
             "Content-Type": "application/JSON",
           },
@@ -68,8 +73,10 @@ function CreateContact({ user, userId, setUser }) {
           const updatedUserData = await response2.json();
           console.log(updatedUserData);
           setUser(updatedUserData);
-          alert("You have created a new user!")
-
+          showAlert(
+            `${newContact.firstName} has been successfully added to your contact list.`,
+            "success"
+          );
           //* Resetting the fields
           setFirstName("");
           setLastName("");
@@ -77,19 +84,44 @@ function CreateContact({ user, userId, setUser }) {
           setAddress("");
         } else {
           const { error } = await response2.json();
+          showAlert(`${error.message}`, "warning");
+
           throw new Error(error.message);
         }
+      } else {
+        const { error } = await response.json();
+        showAlert(error.message);
+        throw new Error(error.message);
       }
     } catch (error) {
-      alert(error.message);
+      showAlert(`${error.message}`, "warning");
+
+      console.log(error.message);
     }
   }
 
   return (
-    <div className="w-full flex flex-col justify-center items-center gap-5 max-w-screen-2xl mx-auto min-h-screen">
-      <h2 className="text-4xl text-white font-bold">{user}'s Contact Manager</h2>
+    <div className="w-full flex text-center flex-col justify-center items-center gap-5 max-w-screen-2xl mx-auto min-h-screen px-2">
+      <div className="w-10/12 bg-white p-4 max-w-screen-2xl mx-auto flex flex-col justify-center items-center rounded-xl gap-3">
+        <div className="w-full flex">
+          <h2 className="w-full text-2xl sm:text-4xl md:text-5xl text-black font-bold">
+            {user}'s Contact Manager
+          </h2>
+        </div>
+        <div className="w-full flex justify-center gap-4">
+          <button
+            onClick={handleDelete}
+            className="bg-[#0474b0] border px-5 py-2 hover:bg-[#b91c1c] text-white rounded-md transition-all shadow-custom-shadow"
+          >
+            Delete Account
+          </button>
+          <button onClick={logOut} className="border bg-[#0474b0] hover:bg-[#14651e] px-5 py-2 text-white rounded-md transition-all shadow-custom-shadow">
+            Log Me Out
+          </button>
+        </div>
+      </div>
       <Box
-        className="w-10/12 flex flex-col items-center justify-center max-w-screen-2xl mx-auto py-20 rounded-xl shadow-custom-shadow border-black bg-white"
+        className="w-10/12 flex flex-col items-center justify-center max-w-screen-2xl mx-auto py-20 px-10 rounded-xl shadow-custom-shadow border-black bg-white"
         component="form"
         onSubmit={handleCreateContact}
         sx={{
@@ -99,7 +131,9 @@ function CreateContact({ user, userId, setUser }) {
         autoComplete="off"
       >
         <div>
-          <h2 className="text-4xl font-semibold">Create a New Contact:</h2>
+          <h2 className="w-full text-2xl text-center sm:text-4xl font-semibold">
+            Create a New Contact:
+          </h2>
         </div>
 
         <TextField
@@ -161,7 +195,6 @@ function CreateContact({ user, userId, setUser }) {
 
         <Button>Add New Contact</Button>
       </Box>
-
     </div>
   );
 }

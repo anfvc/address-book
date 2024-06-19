@@ -12,10 +12,12 @@ import {
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useAlert } from "../Components/AlertContext";
 
 // import BasicModal from "../Components/Modal";
 
 function Login({ onClick, setUserId }) {
+  const { showAlert } = useAlert();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(true);
@@ -54,22 +56,22 @@ function Login({ onClick, setUserId }) {
       if (response.ok) {
         const data = await response.json();
         console.log(data);
+        showAlert(`${data.username} has logged in successfully!`, "success");
         setUserId(data.id);
-        // setShowModal(true);
       } else {
         const { error } = await response.json();
         throw new Error(error.message);
       }
     } catch (error) {
-      alert(error.message);
+      showAlert(`${error.message}`, "warning");
     }
   }
 
   return (
-    <div className="w-full flex flex-col justify-center gap-20 items-center max-w-screen-2xl mx-auto min-h-screen">
-      <h1 className="text-5xl text-white font-bold">Contact Management</h1>
+    <div className="w-full flex flex-col justify-center gap-20 items-center max-w-screen-2xl mx-auto min-h-screen px-2">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl text-center text-white font-bold">Contact Manager</h1>
       <Box
-        className="w-10/12 flex flex-col items-center justify-center max-w-screen-2xl mx-auto py-20 rounded-xl shadow-custom-shadow border-black bg-white"
+        className="w-11/12 flex flex-col items-center justify-center max-w-screen-2xl mx-auto py-20 px-10 rounded-xl shadow-custom-shadow border-black bg-white"
         component="form"
         onSubmit={handleLogin}
         sx={{
@@ -79,7 +81,7 @@ function Login({ onClick, setUserId }) {
         autoComplete="off"
       >
         <div>
-          <h2 className="text-4xl font-semibold text-black">Log In</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-black">Log In</h2>
         </div>
         <TextField
           className="bg-white"
@@ -94,7 +96,11 @@ function Login({ onClick, setUserId }) {
           error={usernameError}
           helperText={usernameError && "Username is required."}
         />
-        <FormControl sx={{ m: 1, width: "25ch" }} variant="filled" error={passwordError}>
+        <FormControl
+          sx={{ m: 1, width: "25ch" }}
+          variant="filled"
+          error={passwordError}
+        >
           <InputLabel htmlFor="filled-adornment-password">Password*</InputLabel>
           <FilledInput
             id="filled-adornment-password"

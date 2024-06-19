@@ -8,7 +8,7 @@ function Contact({ firstName, lastName, phone, address }) {
   useEffect(() => {
     const loader = setTimeout(() => {
       setLoading(false);
-    }, 8000); // I have 8 secs for my contacts to load.
+    }, 3000); // I have 3 secs for my contacts to load.
 
     return () => {
       clearTimeout(loader);
@@ -37,7 +37,7 @@ function Contact({ firstName, lastName, phone, address }) {
           </div>
           <div className=" w-full flex flex-col items-start">
             <h2 className="text-[#1e3a8a] font-semibold">
-              Surname:{" "}
+              Last Name:{" "}
               <span className="text-black font-semibold">
                 {lastName[0].toUpperCase() + lastName.slice(1)}
               </span>

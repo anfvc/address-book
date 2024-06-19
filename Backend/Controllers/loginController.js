@@ -25,10 +25,10 @@ async function loginUser(req, res, next) {
       });
       console.log(`${foundUser.username} has successfully logged in.`);
     } else {
-      next(createHttpError(401, "Login unsuccessful. Please try once again."));
+      next(createHttpError(401, "Username or Password are invalid. Please try once again."));
     }
   } catch (error) {
-    next(createHttpError(500, "Server error."));
+    next(createHttpError(500, "Server Error"));
   }
 }
 

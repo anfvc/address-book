@@ -1,14 +1,25 @@
 import express from "express";
-import { getAllUsers, getUserData, newContact } from "../Controllers/usersController.js";
+import {
+  deleteUser,
+  getAllUsers,
+  getUserData,
+  newContact,
+} from "../Controllers/usersController.js";
 
 const router = express.Router();
 
-//* GET http://localhost:3001/login
+//* GET http://localhost:3001/users
 router.get("/", getAllUsers);
 
-//* GET http://localhost:3001/login
+//* GET http://localhost:3001/users/:id
 router.get("/:id", getUserData);
 
-router.patch("/:id/contacts", newContact)
+//* PATCH http://localhost:3001/users/:id/contacts
+
+router.patch("/:id/contacts", newContact);
+
+//* DELETE http://localhost:3001/users/:id
+
+router.delete("/:id", deleteUser);
 
 export default router;

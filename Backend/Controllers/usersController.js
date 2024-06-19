@@ -89,8 +89,26 @@ export async function newContact(req, res, next) {
           (contact) => contact.softDeletedAt === null
         ),
       });
-    } catch (error) {}
+    } catch (error) {
+      next(createHttpError(500, "Server Error"));
+    }
   } else {
     next(createHttpError(404, "This user was not found."));
+  }
+}
+
+export async function deleteUser(req, res, next) {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+
+    if (deletedUser) {
+      res.json({
+        message: `Account deleted successfully.`,
+      });
+    } else {
+      next(createHttpError(404, "Account not found."));
+    }
+  } catch (error) {
+    next(createHttpError(500, "Server Error"));
   }
 }

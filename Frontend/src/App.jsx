@@ -2,6 +2,7 @@ import { useState } from "react";
 import MyContacts from "./Views/MyContacts";
 import Login from "./Views/Login";
 import Register from "./Views/Register";
+import { AlertProvider } from "./Components/AlertContext";
 
 function App() {
   const [existUser, setExistUser] = useState(null);
@@ -12,17 +13,19 @@ function App() {
   }
 
   return (
-    <div className="w-full flex items-center justify-center max-w-screen-2xl mx-auto min-h-screen">
-      {!existUser ? (
-        showLogin ? (
-          <Login onClick={handleToggleLogin} setUserId={setExistUser} />
+    <AlertProvider>
+      <div className="w-full flex items-center justify-center max-w-screen-2xl mx-auto min-h-screen">
+        {!existUser ? (
+          showLogin ? (
+            <Login onClick={handleToggleLogin} setUserId={setExistUser} />
+          ) : (
+            <Register onClick={handleToggleLogin} setUserId={setExistUser} />
+          )
         ) : (
-          <Register onClick={handleToggleLogin} setUserId={setExistUser} />
-        )
-      ) : (
-        <MyContacts userId={existUser} setUserId={setExistUser} />
-      )}
-    </div>
+          <MyContacts userId={existUser} setUserId={setExistUser} />
+        )}
+      </div>
+    </AlertProvider>
   );
 }
 

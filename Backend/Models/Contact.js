@@ -5,22 +5,40 @@ const contactSchema = new Schema({
   firstName: {
     type: String,
     required: true,
-    minLength: [3, "First name must be at least 3 chars long."],
+    validate: {
+      validator: function (value) {
+        return validator.isLength(value, { min: 2 });
+      },
+      message: "First Name must be maximum 30 characters long.",
+    },
   },
   lastName: {
     type: String,
     required: true,
-    minLength: [5, "Last name must be at least 3 chars long."],
+    validate: {
+      validator: function (value) {
+        return validator.isLength(value, { min: 2 });
+      },
+      message: "Last Number must be maximum 30 characters long.",
+    },
   },
   phone: {
     type: String,
     required: true,
-    validate: {
-      validator: function (value) {
-        return validator.isMobilePhone(value, "de-DE");
+    validate: [
+      {
+        validator: function (value) {
+          return validator.isMobilePhone(value);
+        },
+        message: "Please provide a valid phone number.",
       },
-      message: "Please provide a valid german number.",
-    },
+      {
+        validator: function (value) {
+          return validator.isLength(value, { min: 10 });
+        },
+        message: "Phone number must be min 10 characters long.",
+      },
+    ],
   },
   address: {
     type: String,

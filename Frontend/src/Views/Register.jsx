@@ -8,12 +8,14 @@ import {
   FormHelperText,
   TextField,
   FilledInput,
-  IconButton
+  IconButton,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useAlert } from "../Components/AlertContext";
 
 function Register({ onClick, setUserId }) {
+  const { showAlert } = useAlert();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -61,17 +63,27 @@ function Register({ onClick, setUserId }) {
         console.log(newUserCreated);
 
         setUserId(newUserCreated.id);
-        alert("Registration has been successful!");
+        showAlert(
+          `${newUserCreated.username} has been successfully registered!`,
+          "success"
+        );
+      } else {
+        const { error } = await response.json();
+        throw new Error(error.message);
       }
-    } catch (error) {}
+    } catch (error) {
+      showAlert(`Registration unsuccessful, please try again.`, "warning");
+      console.log(error);
+      showAlert(`${error.message}`, "warning");
+    }
   }
 
   return (
-    <div className="w-full flex flex-col justify-center items-center gap-20 max-w-screen-2xl mx-auto min-h-screen">
-      <h1 className="text-5xl text-white font-bold">Contact Management</h1>
+    <div className="w-full flex flex-col justify-center items-center gap-10 max-w-screen-2xl mx-auto min-h-screen px-2">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl text-center text-white font-bold">Contact Manager</h1>
 
       <Box
-        className="w-10/12 flex flex-col items-center justify-center max-w-screen-2xl mx-auto py-20 rounded-xl shadow-custom-shadow border-black bg-white"
+        className="w-11/12 flex flex-col items-center justify-center max-w-screen-2xl mx-auto py-10 px-10 rounded-xl shadow-custom-shadow border-black bg-white"
         component="form"
         onSubmit={handleRegistration}
         sx={{
@@ -81,7 +93,7 @@ function Register({ onClick, setUserId }) {
         autoComplete="off"
       >
         <div>
-          <h2 className="text-4xl font-semibold">Registration</h2>
+          <h2 className="text-2xl md:text-4xl font-semibold">Registration</h2>
         </div>
 
         <TextField
