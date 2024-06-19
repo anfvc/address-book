@@ -1,13 +1,29 @@
 import express from "express";
-import createHttpError from "http-errors";
-import { createContact, editContact } from "../Controllers/contactController.js";
+import {
+  createContact,
+  editContact,
+  findContactById,
+  deleteContact,
+  deleteAllContacts,
+} from "../Controllers/contactController.js";
 
 const router = express.Router();
+
+//* GET http://localhost:3001/contacts/:id
+router.get("/:id", findContactById);
 
 //* POST http://localhost:3001/contacts
 
 router.post("/", createContact);
 
-router.put("/:id", editContact)
+//* PUT http://localhost:3001/contacts/:id
+
+router.put("/:id", editContact);
+
+//* DELETE http://localhost:3001/contacts/:id
+router.delete("/:id", deleteContact);
+
+//* DELETE http://localhost:3001/contacts/
+router.delete("/", deleteAllContacts);
 
 export default router;

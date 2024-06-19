@@ -14,7 +14,7 @@ function App() {
 
   return (
     <AlertProvider>
-      <div className="w-full flex items-center justify-center max-w-screen-2xl mx-auto min-h-screen">
+      <div className="w-full flex items-center justify-center max-w-screen-2xl mx-auto min-h-screen px-2">
         {!existUser ? (
           showLogin ? (
             <Login onClick={handleToggleLogin} setUserId={setExistUser} />

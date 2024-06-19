@@ -1,9 +1,17 @@
 import { Box, TextField } from "@mui/material";
 import Button from "./Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAlert } from "./AlertContext";
 
-function CreateContact({ user, userId, setUser, handleDelete, logOut }) {
+function CreateContact({
+  user,
+  userId,
+  setUser,
+  handleDelete,
+  logOut,
+  editingContactId,
+  onUpdateContact
+}) {
   const { showAlert } = useAlert();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -14,6 +22,35 @@ function CreateContact({ user, userId, setUser, handleDelete, logOut }) {
   const [lNError, setLError] = useState(false);
   const [phoneError, setPhoneError] = useState(false);
   const [addressError, setAddressError] = useState(false);
+
+  const [editMode, setEditMode] = useState(false); //* Helps to track edit mode
+
+  useEffect(() => {
+    if (editingContactId) {
+      fetchContact(editingContactId);
+      setEditMode(true);
+    }
+  }, [editingContactId]);
+
+  async function fetchContact(contactId) {
+    try {
+      const response = await fetch(`http://localhost:3001/contacts/${contactId}`);
+
+      if (response.ok) {
+        const data = await response.json();
+        setFirstName(data.firstName);
+        setLastName(data.lastName);
+        setPhone(data.phone);
+        setAddress(data.address);
+        setEditMode(true); // Activating Edit mode
+      } else {
+        const { error } = await response.json();
+        throw new Error(error.message);
+      }
+    } catch (error) {
+      showAlert("Error fetching contact details.", "warning");
+    }
+  }
 
   //* Creating a new contact:
 
@@ -29,9 +66,9 @@ function CreateContact({ user, userId, setUser, handleDelete, logOut }) {
     }
 
     try {
-      //* Try to create a new contact in the "contacts" collection
+      //* Try to create a new contact/update in the "contacts" collection
       const settings = {
-        method: "POST",
+        method: editMode ? "PUT" : "POST",
         body: JSON.stringify({
           firstName,
           lastName,
@@ -44,50 +81,72 @@ function CreateContact({ user, userId, setUser, handleDelete, logOut }) {
         },
       };
 
-      const response = await fetch(`http://localhost:3001/contacts`, settings);
+      const url = editMode
+        ? `http://localhost:3001/contacts/${editingContactId}`
+        : `http://localhost:3001/contacts`;
+
+      const response = await fetch(url, settings);
 
       if (response.ok) {
-        const newContact = await response.json();
-        //* Must add the _id of the new contact document to the user's "contacts" collection:
-        console.log(newContact);
+        const updatedContact = await response.json();
 
-        const settings2 = {
-          method: "PATCH",
-          body: JSON.stringify({
-            id: newContact.id,
-            firstName: newContact.firstName,
-          }),
-          headers: {
-            "Content-Type": "application/JSON",
-          },
-        };
-
-        const response2 = await fetch(
-          `http://localhost:3001/users/${userId}/contacts`,
-          settings2
-        );
-
-        if (response2.ok) {
-          //? The response should have an object like:
-          //* {id: "a", firstName: "b"...}
-          const updatedUserData = await response2.json();
-          console.log(updatedUserData);
-          setUser(updatedUserData);
+        if (editMode) {
           showAlert(
-            `${newContact.firstName} has been successfully added to your contact list.`,
+            `${updatedContact.firstName} has been successfully updated.`,
             "success"
           );
-          //* Resetting the fields
-          setFirstName("");
-          setLastName("");
-          setPhone("");
-          setAddress("");
+          console.log(updatedContact.firstName);
+          onUpdateContact(updatedContact)
+          setEditMode(false);
         } else {
-          const { error } = await response2.json();
-          showAlert(`${error.message}`, "warning");
+          showAlert(
+            `${updatedContact.firstName} has been successfully added to your ontact list.`,
+            "success"
+          );
+          //* Must add the _id of the new contact document to the user's "contacts" collection:
+          console.log(updatedContact);
 
-          throw new Error(error.message);
+          const settings2 = {
+            method: "PATCH",
+            body: JSON.stringify({
+              id: updatedContact.id,
+              firstName: updatedContact.firstName,
+              lastName: updatedContact.lastName,
+              phone: updatedContact.phone,
+              address: updatedContact.address,
+            }),
+            headers: {
+              "Content-Type": "application/JSON",
+            },
+          };
+          const response2 = await fetch(
+            `http://localhost:3001/users/${userId}/contacts`,
+            settings2
+          );
+          if (response2.ok) {
+            //? The response should have an object like:
+            //* {id: "a", firstName: "b"...}
+            const updatedUserData = await response2.json();
+            console.log(updatedUserData);
+            setUser(updatedUserData);
+            showAlert(
+              `${updatedContact.firstName} has been successfully added to your contact list.`,
+              "success"
+            );
+            console.log(updatedContact.firstName);
+            //* Resetting the fields
+          } else {
+            const { error } = await response2.json();
+            showAlert(`${error.message}`, "warning");
+
+            throw new Error(error.message);
+          }
         }
+
+        setFirstName("");
+        setLastName("");
+        setPhone("");
+        setAddress("");
       } else {
         const { error } = await response.json();
         showAlert(error.message);
@@ -115,7 +174,10 @@ function CreateContact({ user, userId, setUser, handleDelete, logOut }) {
           >
             Delete Account
           </button>
-          <button onClick={logOut} className="border bg-[#0474b0] hover:bg-[#14651e] px-5 py-2 text-white rounded-md transition-all shadow-custom-shadow">
+          <button
+            onClick={logOut}
+            className="border bg-[#0474b0] hover:bg-[#14651e] px-5 py-2 text-white rounded-md transition-all shadow-custom-shadow"
+          >
             Log Me Out
           </button>
         </div>
@@ -132,7 +194,7 @@ function CreateContact({ user, userId, setUser, handleDelete, logOut }) {
       >
         <div>
           <h2 className="w-full text-2xl text-center sm:text-4xl font-semibold">
-            Create a New Contact:
+            {editMode ? "Update Contact" : "Create a New Contact"}
           </h2>
         </div>
 
@@ -193,7 +255,7 @@ function CreateContact({ user, userId, setUser, handleDelete, logOut }) {
           helperText={addressError && "Address is required."}
         />
 
-        <Button>Add New Contact</Button>
+        <Button>{editMode ? "Update Contact" : "Add New Contact"}</Button>
       </Box>
     </div>
   );

@@ -23,7 +23,7 @@ try {
       username: "test1",
       password: test1,
       address: "Avenue 123",
-      phone: "012314223",
+      phone: "017631508162",
       contacts: [],
     },
     {
@@ -31,7 +31,7 @@ try {
       username: "test2",
       password: test2,
       address: "Avenue 222",
-      phone: "0231212223",
+      phone: "017631507150",
       contacts: [],
     },
     {
@@ -39,7 +39,7 @@ try {
       username: "test3",
       password: test3,
       address: "Avenue 342",
-      phone: "02312122329",
+      phone: "017631616280",
       contacts: [],
     },
   ];

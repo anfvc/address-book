@@ -19,7 +19,7 @@ const contactSchema = new Schema({
       validator: function (value) {
         return validator.isLength(value, { min: 2 });
       },
-      message: "Last Number must be maximum 30 characters long.",
+      message: "Last Name must be maximum 30 characters long.",
     },
   },
   phone: {
