@@ -1,4 +1,4 @@
-# Address Book
+# Contact Manager App
 This is a full stack application where the user can store multiple contacts. More like a contact manager.
 
 ## For installation:
