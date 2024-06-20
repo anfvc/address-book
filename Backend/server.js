@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 import connectDataBase from "./Libs/database.js";
-import { globalErrorHandler } from "./GlobalErrorHandler/GErrorHandler.js";
+import { globalErrorHandler } from "./Middleware/GErrorHandler.js";
+import captcha from "./Middleware/captcha.js";
 import registerRouter from "./Routes/registerRouter.js";
 import loginRouter from "./Routes/loginRouter.js";
 import contactsRouter from "./Routes/contactsRouter.js";
@@ -22,9 +23,9 @@ app.use(cors());
 
 app.use("/users", usersRouter);
 
-app.use("/register", registerRouter);
+app.use("/register", captcha, registerRouter);
 
-app.use("/login", loginRouter);
+app.use("/login", captcha, loginRouter);
 
 app.use("/contacts", contactsRouter);
 

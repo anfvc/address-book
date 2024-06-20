@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "../Components/Button";
 import IconButton from "@mui/material/IconButton";
@@ -13,14 +13,14 @@ import {
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useAlert } from "../Components/AlertContext";
-
-// import BasicModal from "../Components/Modal";
+import ReCaPTCHA from "react-google-recaptcha";
 
 function Login({ onClick, setUserId }) {
   const { showAlert } = useAlert();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(true);
+  const recaptcha = useRef(null);
 
   function handleShowPassword() {
     setShowPassword(!showPassword);
@@ -32,9 +32,17 @@ function Login({ onClick, setUserId }) {
   async function handleLogin(e) {
     e.preventDefault();
 
+    let captchaValue = recaptcha.current.getValue();
+
+    if (!captchaValue) {
+      showAlert("Please complete the reCaptcha to continue.", "warning");
+      return;
+    }
+
     if (!username || !password) {
       setUsernameError(!username);
       setPasswordError(!password);
+      showAlert("Please fill in all the required fields.", "warning")
       return;
     }
 
@@ -43,7 +51,7 @@ function Login({ onClick, setUserId }) {
     try {
       const settings = {
         method: "POST",
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, recaptcha: captchaValue }),
         headers: {
           "Content-Type": "application/JSON",
         },
@@ -69,7 +77,9 @@ function Login({ onClick, setUserId }) {
 
   return (
     <div className="w-full flex flex-col justify-center gap-20 items-center max-w-screen-2xl mx-auto min-h-screen px-2">
-      <h1 className="text-3xl sm:text-4xl md:text-5xl text-center text-white font-bold">Contact Manager</h1>
+      <h1 className="text-3xl sm:text-4xl md:text-5xl text-center text-white font-bold">
+        Contact Manager
+      </h1>
       <Box
         className="w-11/12 flex flex-col items-center justify-center max-w-screen-2xl mx-auto py-20 px-10 rounded-xl shadow-custom-shadow border-black bg-white"
         component="form"
@@ -81,7 +91,9 @@ function Login({ onClick, setUserId }) {
         autoComplete="off"
       >
         <div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-black">Log In</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-black">
+            Log In
+          </h2>
         </div>
         <TextField
           className="bg-white"
@@ -126,6 +138,19 @@ function Login({ onClick, setUserId }) {
             <FormHelperText>Password is required.</FormHelperText>
           )}
         </FormControl>
+
+        <div style={{ width: "100%" }}>
+          <ReCaPTCHA
+            sitekey={import.meta.env.VITE_SITE}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignContent: "center",
+              padding: "1rem",
+            }}
+            ref={recaptcha}
+          />
+        </div>
 
         <Button>Login!</Button>
         <div className="w-full flex flex-col justify-center items-center font-semibold">

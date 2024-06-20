@@ -1,6 +1,7 @@
 import User from "../Models/User.js";
 import createHttpError from "http-errors";
 import { compare } from "bcrypt";
+import captcha from "../Middleware/captcha.js";
 
 async function loginUser(req, res, next) {
   //* Destructure req.body to get the username, password

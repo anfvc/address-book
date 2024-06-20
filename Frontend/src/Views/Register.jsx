@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Button from "../Components/Button";
 import {
   InputLabel,
@@ -13,6 +13,7 @@ import {
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useAlert } from "../Components/AlertContext";
+import ReCAPTCHA from "react-google-recaptcha";
 
 function Register({ onClick, setUserId }) {
   const { showAlert } = useAlert();
@@ -22,6 +23,8 @@ function Register({ onClick, setUserId }) {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [showPassword, setShowPassword] = useState(true);
+
+  const recaptcha = useRef(null);
 
   function handleShowPassword() {
     setShowPassword(!showPassword);
@@ -36,6 +39,13 @@ function Register({ onClick, setUserId }) {
   async function handleRegistration(e) {
     e.preventDefault();
 
+    let captchaValue = recaptcha.current.getValue();
+
+    if (!captchaValue) {
+      showAlert("Please complete the reCaptcha to continue.", "warning");
+      return;
+    }
+
     if (!email || !username || !password || !phone || !address) {
       // Set error states for each empty field
       setEmailError(!email);
@@ -43,13 +53,22 @@ function Register({ onClick, setUserId }) {
       setPasswordError(!password);
       setPhoneError(!phone);
       setAddressError(!address);
+      showAlert("Please fill in all the required fields.", "warning");
+
       return; // Exit early if any field is empty
     }
 
     try {
       const settings = {
         method: "POST",
-        body: JSON.stringify({ email, username, password, phone, address }),
+        body: JSON.stringify({
+          email,
+          username,
+          password,
+          phone,
+          address,
+          recaptcha: captchaValue,
+        }),
         headers: {
           "Content-Type": "application/JSON",
         },
@@ -80,7 +99,9 @@ function Register({ onClick, setUserId }) {
 
   return (
     <div className="w-full flex flex-col justify-center items-center gap-10 max-w-screen-2xl mx-auto min-h-screen px-2">
-      <h1 className="text-3xl sm:text-4xl md:text-5xl text-center text-white font-bold">Contact Manager</h1>
+      <h1 className="text-3xl sm:text-4xl md:text-5xl text-center text-white font-bold">
+        Contact Manager
+      </h1>
 
       <Box
         className="w-11/12 flex flex-col items-center justify-center max-w-screen-2xl mx-auto py-10 px-10 rounded-xl shadow-custom-shadow border-black bg-white"
@@ -183,6 +204,18 @@ function Register({ onClick, setUserId }) {
           error={addressError}
           helperText={addressError && "Address is required."}
         />
+        <div style={{ width: "100%" }}>
+          <ReCAPTCHA
+            sitekey={import.meta.env.VITE_SITE}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignContent: "center",
+              padding: "1rem",
+            }}
+            ref={recaptcha}
+          />
+        </div>
         <Button>Register</Button>
         <div className="w-full flex flex-col justify-center items-center font-semibold">
           Have an account?{" "}

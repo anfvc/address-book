@@ -46,7 +46,7 @@ const userSchema = new Schema({
         validator: function (value) {
           return validator.isLength(value, { min: 10 });
         },
-        message: "Phone must be 10 characters long."
+        message: "Phone must be 10 characters long.",
       },
     ],
   },
@@ -65,6 +65,12 @@ const userSchema = new Schema({
     ],
     required: true,
     default: [],
+  },
+  role: {
+    type: String,
+    required: true,
+    enum: ["admin", "user"],
+    default: "user",
   },
 });
 
