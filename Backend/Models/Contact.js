@@ -7,9 +7,9 @@ const contactSchema = new Schema({
     required: true,
     validate: {
       validator: function (value) {
-        return validator.isLength(value, { min: 2 });
+        return validator.isLength(value, { min: 3 });
       },
-      message: "First Name must be maximum 30 characters long.",
+      message: "First name must be minimum 3 characters long.",
     },
   },
   lastName: {
@@ -19,7 +19,7 @@ const contactSchema = new Schema({
       validator: function (value) {
         return validator.isLength(value, { min: 2 });
       },
-      message: "Last Name must be maximum 30 characters long.",
+      message: "Last name must be maximum 30 characters long.",
     },
   },
   phone: {
@@ -43,6 +43,12 @@ const contactSchema = new Schema({
   address: {
     type: String,
     required: true,
+    validate: {
+      validator: function (value) {
+        return validator.isLength(value, { min: 5 });
+      },
+      message: "Address must be min 5 characters and have a number(s)."
+    },
   },
   addedBy: {
     //* When a person wants to create a new contact, the contact will have a copy of the user's _id

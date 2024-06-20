@@ -91,7 +91,7 @@ function Login({ onClick, setUserId }) {
         autoComplete="off"
       >
         <div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-black">
+          <h2 className="text-3xl sm:text-4xl md:text-4xl font-semibold text-black">
             Log In
           </h2>
         </div>
@@ -152,7 +152,7 @@ function Login({ onClick, setUserId }) {
           />
         </div>
 
-        <Button>Login!</Button>
+        <Button>Login</Button>
         <div className="w-full flex flex-col justify-center items-center font-semibold">
           Don't have an account yet?{" "}
           <span onClick={onClick} className="text-[#2B6CB0] cursor-pointer">
