@@ -39,13 +39,6 @@ function Register({ onClick, setUserId }) {
   async function handleRegistration(e) {
     e.preventDefault();
 
-    let captchaValue = recaptcha.current.getValue();
-
-    if (!captchaValue) {
-      showAlert("Please complete the reCaptcha to continue.", "warning");
-      return;
-    }
-
     if (!email || !username || !password || !phone || !address) {
       // Set error states for each empty field
       setEmailError(!email);
@@ -56,6 +49,13 @@ function Register({ onClick, setUserId }) {
       showAlert("Please fill in all the required fields.", "warning");
 
       return; // Exit early if any field is empty
+    }
+
+    let captchaValue = recaptcha.current.getValue();
+
+    if (!captchaValue) {
+      showAlert("Please complete the reCaptcha to continue.", "warning");
+      return;
     }
 
     try {

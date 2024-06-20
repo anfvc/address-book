@@ -32,17 +32,17 @@ function Login({ onClick, setUserId }) {
   async function handleLogin(e) {
     e.preventDefault();
 
+    if (!username || !password) {
+      setUsernameError(!username);
+      setPasswordError(!password);
+      showAlert("Please fill in all the required fields.", "warning");
+      return;
+    }
+
     let captchaValue = recaptcha.current.getValue();
 
     if (!captchaValue) {
       showAlert("Please complete the reCaptcha to continue.", "warning");
-      return;
-    }
-
-    if (!username || !password) {
-      setUsernameError(!username);
-      setPasswordError(!password);
-      showAlert("Please fill in all the required fields.", "warning")
       return;
     }
 
