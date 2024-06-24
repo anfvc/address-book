@@ -59,7 +59,7 @@ function Login({ onClick, setUserId }) {
       };
 
       //* Send POST request to login:
-      const response = await fetch(`http://localhost:3001/login`, settings);
+      const response = await fetch(`${import.meta.env.VITE_API}/login`, settings);
 
       if (response.ok) {
         const data = await response.json();

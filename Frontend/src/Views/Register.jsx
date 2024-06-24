@@ -75,7 +75,7 @@ function Register({ onClick, setUserId }) {
       };
 
       //* Attempting to register a user:
-      const response = await fetch(`http://localhost:3001/register`, settings);
+      const response = await fetch(`${import.meta.env.VITE_API}/register`, settings);
 
       if (response.ok) {
         const newUserCreated = await response.json();
