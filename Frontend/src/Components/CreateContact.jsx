@@ -34,7 +34,7 @@ function CreateContact({
 
   async function fetchContact(contactId) {
     try {
-      const response = await fetch(`http://localhost:3001/contacts/${contactId}`);
+      const response = await fetch(`${import.meta.env.VITE_API}/contacts/${contactId}`);
 
       if (response.ok) {
         const data = await response.json();
@@ -82,8 +82,8 @@ function CreateContact({
       };
 
       const url = editMode
-        ? `http://localhost:3001/contacts/${editingContactId}`
-        : `http://localhost:3001/contacts`;
+        ? `${import.meta.env.VITE_API}/contacts/${editingContactId}`
+        : `${import.meta.env.VITE_API}/contacts`;
 
       const response = await fetch(url, settings);
 
@@ -120,7 +120,7 @@ function CreateContact({
             },
           };
           const response2 = await fetch(
-            `http://localhost:3001/users/${userId}/contacts`,
+            `${import.meta.env.VITE_API}/users/${userId}/contacts`,
             settings2
           );
           if (response2.ok) {

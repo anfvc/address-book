@@ -18,7 +18,7 @@ function MyContacts({ setUserId, userId }) {
 
   async function getUserData() {
     try {
-      const response = await fetch(`http://localhost:3001/users/${userId}`);
+      const response = await fetch(`${import.meta.env.VITE_API}/users/${userId}`);
 
       if (response.ok) {
         const userData = await response.json();
@@ -40,7 +40,7 @@ function MyContacts({ setUserId, userId }) {
       };
 
       const response = await fetch(
-        `http://localhost:3001/users/${userId}`,
+        `${import.meta.env.VITE_API}/users/${userId}`,
         settings
       );
 
@@ -79,7 +79,7 @@ function MyContacts({ setUserId, userId }) {
       };
 
       const response = await fetch(
-        `http://localhost:3001/contacts/${updatedContact.id}`
+        `${import.meta.env.VITE_API}/contacts/${updatedContact.id}`
       );
 
       if (response.ok) {
@@ -114,7 +114,7 @@ function MyContacts({ setUserId, userId }) {
       };
 
       const response = await fetch(
-        `http://localhost:3001/contacts/${contactId}`,
+        `${import.meta.env.VITE_API}/contacts/${contactId}`,
         settings
       );
 
@@ -144,7 +144,7 @@ function MyContacts({ setUserId, userId }) {
         body: JSON.stringify({userId})
       };
 
-      const response = await fetch("http://localhost:3001/contacts", settings);
+      const response = await fetch(`${import.meta.env.VITE_API}/contacts`, settings);
 
       if (response.ok) {
         const { message } = await response.json();
