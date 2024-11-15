@@ -4,7 +4,7 @@ import { Snackbar, Alert as MuiAlert } from "@mui/material";
 const AlertContext = createContext();
 export const useAlert = () => useContext(AlertContext);
 
-export function AlertProvider({children}) {
+export function AlertProvider({ children }) {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState("success");
@@ -40,5 +40,3 @@ export function AlertProvider({children}) {
     </AlertContext.Provider>
   );
 }
-
-

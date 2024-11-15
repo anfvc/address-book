@@ -10,7 +10,7 @@ function CreateContact({
   handleDelete,
   logOut,
   editingContactId,
-  onUpdateContact
+  onUpdateContact,
 }) {
   const { showAlert } = useAlert();
   const [firstName, setFirstName] = useState("");
@@ -34,7 +34,9 @@ function CreateContact({
 
   async function fetchContact(contactId) {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API}/contacts/${contactId}`);
+      const response = await fetch(
+        `${import.meta.env.VITE_API}/contacts/${contactId}`
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -96,7 +98,7 @@ function CreateContact({
             "success"
           );
           console.log(updatedContact.firstName);
-          onUpdateContact(updatedContact)
+          onUpdateContact(updatedContact);
           setEditMode(false);
         } else {
           showAlert(
